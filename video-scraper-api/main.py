@@ -88,7 +88,7 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
             'outtmpl': '/tmp/video.mp4',
             'postprocessors': [{
                 'key': 'FFmpegMerger',
-                'preferedformat': 'mp4',
+                'preferredformat': 'mp4',
             }],
         }
     else:
@@ -98,7 +98,7 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
             'outtmpl': '/tmp/video.mp4',
             'postprocessors': [{
                 'key': 'FFmpegMerger',
-                'preferedformat': 'mp4',
+                'preferredformat': 'mp4',
             }],
         }
     
