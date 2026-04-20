@@ -124,8 +124,9 @@ function App() {
               disabled={loading || !url}
               className="px-10 py-4 text-base font-medium rounded-2xl transition-all duration-300"
               style={{ 
-                backgroundColor: '#111111', 
+                backgroundColor: 'white', 
                 color: '#111111',
+                border: '1px solid #EEEEEE',
                 opacity: loading || !url ? 0.3 : 1,
                 boxShadow: loading || !url ? 'none' : '0 4px 12px rgba(17,17,17,0.15)'
               }}
@@ -203,7 +204,8 @@ function App() {
                 style={{ 
                   backgroundColor: '#111111', 
                   color: 'white',
-                  opacity: loading ? 0.3 : 1
+                  opacity: loading ? 0.3 : 1,
+                  boxShadow: loading ? 'none' : '0 4px 12px rgba(17,17,17,0.15)'
                 }}
               >
                 {loading ? 'Downloading...' : 'Download'}
