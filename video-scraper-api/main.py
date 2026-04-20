@@ -19,7 +19,6 @@ YTDLP_OPTIONS = {
     'noplaylist': True,
     'quiet': True,
     'no_warnings': True,
-    'merge_output_format': 'mp4',
 }
 
 
@@ -34,20 +33,23 @@ async def get_video_info(url: str = Query(...)):
             ext = f.get('ext', '')
             acodec = f.get('acodec', 'none')
             resolution = f.get('resolution') or f.get('height')
+            vcodec = f.get('vcodec', 'none')
             has_audio = acodec != 'none'
             
-            if resolution and not has_audio:
+            if resolution and not has_audio and vcodec != 'none':
                 continue
             
-            if ext in ['m4a', 'mp3']:
+            if ext in ['m4a', 'mp3', 'aac']:
                 quality = 'audio'
             elif resolution:
                 quality = f"{resolution}p"
+            elif acodec != 'none' and vcodec == 'none':
+                quality = 'audio'
             else:
-                continue
+                quality = 'video'
             
             quality_key = f"{quality}-{ext}"
-            if quality_key not in seen_qualities and ext in ['mp4', 'm4a', 'mp3']:
+            if quality_key not in seen_qualities and ext in ['mp4', 'm4a', 'mp3', 'aac', 'mov', 'webm', 'mkv']:
                 seen_qualities.add(quality_key)
                 formats.append({
                     'format_id': f.get('format_id', ''),
