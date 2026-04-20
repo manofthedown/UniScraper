@@ -125,7 +125,7 @@ function App() {
               className="px-10 py-4 text-base font-medium rounded-2xl transition-all duration-300"
               style={{ 
                 backgroundColor: '#111111', 
-                color: 'black',
+                color: '#111111',
                 opacity: loading || !url ? 0.3 : 1,
                 boxShadow: loading || !url ? 'none' : '0 4px 12px rgba(17,17,17,0.15)'
               }}
