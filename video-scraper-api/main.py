@@ -44,7 +44,11 @@ async def get_video_info(url: str = Query(...)):
                 quality = 'video'
             
             quality_key = f"{quality}-{ext}"
-            if quality_key not in seen_qualities and ext in ['mp4', 'm4a', 'webm', 'mp3', 'wav', 'ogg', 'mkv']:
+            if quality_key not in seen_qualities and ext in ['mp4', 'm4a', 'mp3']:
+                if ext in ['m4a', 'mp3']:
+                    quality = 'audio'
+                elif resolution:
+                    quality = f"{resolution}p"
                 seen_qualities.add(quality_key)
                 formats.append({
                     'format_id': f.get('format_id', ''),
@@ -77,12 +81,19 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
     if format_id and format_id.lower() == 'none':
         format_id = None
     
-    ydl_opts = {
-        'format': format_id if format_id else 'bestvideo+bestaudio/best',
-        'noplaylist': True,
-        'outtmpl': '/tmp/video.%(ext)s',
-        'merge_output_format': 'mp4',
-    }
+    if format_id:
+        ydl_opts = {
+            'format': format_id,
+            'noplaylist': True,
+            'outtmpl': '/tmp/video.%(ext)s',
+        }
+    else:
+        ydl_opts = {
+            'format': 'bestvideo+bestaudio/best',
+            'noplaylist': True,
+            'outtmpl': '/tmp/video.%(ext)s',
+            'merge_output_format': 'mp4',
+        }
     
     ydl = yt_dlp.YoutubeDL(ydl_opts)
     info = ydl.extract_info(url, download=True)
