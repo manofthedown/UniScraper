@@ -101,7 +101,7 @@ function App() {
         </header>
 
         <div className="mb-10">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col items-center gap-4">
             <input
               type="text"
               value={url}
@@ -109,7 +109,7 @@ function App() {
               onKeyDown={handleKeyPress}
               placeholder="https://..."
               disabled={loading}
-              className="w-full px-5 py-4 text-lg rounded-xl bg-white border-0 transition-all duration-300"
+              className="w-full max-w-md px-6 py-4 text-lg rounded-2xl bg-white border-0 transition-all duration-300"
               style={{ 
                 border: '1px solid #EEEEEE',
                 color: '#111111',
@@ -121,7 +121,7 @@ function App() {
             <button
               onClick={fetchInfo}
               disabled={loading || !url}
-              className="w-full px-5 py-4 text-base font-medium rounded-xl transition-all duration-300"
+              className="px-10 py-4 text-base font-medium rounded-2xl transition-all duration-300"
               style={{ 
                 backgroundColor: '#111111', 
                 color: 'white',
@@ -129,7 +129,7 @@ function App() {
                 boxShadow: loading || !url ? 'none' : '0 4px 12px rgba(17,17,17,0.15)'
               }}
             >
-              {loading ? 'Fetching video...' : 'Get Video Info'}
+              {loading ? 'Fetching video...' : 'Wizard Shit'}
             </button>
           </div>
         </div>
