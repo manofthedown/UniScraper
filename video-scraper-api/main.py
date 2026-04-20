@@ -36,6 +36,8 @@ async def get_video_info(url: str = Query(...)):
             acodec = f.get('acodec', 'none')
             resolution = f.get('resolution') or f.get('height')
             
+            has_audio = acodec != 'none'
+            
             if resolution:
                 quality = f"{resolution}p"
             elif acodec != 'none' and vcodec == 'none':
@@ -45,6 +47,8 @@ async def get_video_info(url: str = Query(...)):
             
             quality_key = f"{quality}-{ext}"
             if quality_key not in seen_qualities and ext in ['mp4', 'm4a', 'mp3']:
+                if not has_audio and resolution:
+                    continue
                 if ext in ['m4a', 'mp3']:
                     quality = 'audio'
                 elif resolution:
@@ -85,21 +89,13 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
         ydl_opts = {
             'format': format_id,
             'noplaylist': True,
-            'outtmpl': '/tmp/video.mp4',
-            'postprocessors': [{
-                'key': 'FFmpegMerger',
-                'preferredformat': 'mp4',
-            }],
+            'outtmpl': '/tmp/video.%(ext)s',
         }
     else:
         ydl_opts = {
-            'format': 'bestvideo+bestaudio/best',
+            'format': 'best',
             'noplaylist': True,
-            'outtmpl': '/tmp/video.mp4',
-            'postprocessors': [{
-                'key': 'FFmpegMerger',
-                'preferredformat': 'mp4',
-            }],
+            'outtmpl': '/tmp/video.%(ext)s',
         }
     
     ydl = yt_dlp.YoutubeDL(ydl_opts)
