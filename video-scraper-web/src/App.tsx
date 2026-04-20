@@ -101,7 +101,7 @@ function App() {
         </header>
 
         <div className="mb-10">
-          <div className="flex flex-col" style={{ alignItems: 'center', gap: '16px' }}>
+          <div className="flex flex-col" style={{ alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
             <input
               type="text"
               value={url}
@@ -155,7 +155,7 @@ function App() {
             style={{ 
               boxShadow: '0 2px 20px rgba(0,0,0,0.04)',
               border: '1px solid #F0F0F0',
-              maxWidth: '380px',
+              maxWidth: '760px',
               margin: '0 auto 2rem auto'
             }}
           >
@@ -182,7 +182,7 @@ function App() {
               </div>
             </div>
             
-            <div className="flex flex-col gap-3" style={{ alignItems: 'center' }}>
+            <div className="flex flex-col gap-4" style={{ alignItems: 'center' }}>
               <select
                 value={selectedFormat}
                 onChange={(e) => setSelectedFormat(e.target.value)}
