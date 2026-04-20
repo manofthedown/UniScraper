@@ -61,42 +61,37 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
         'noplaylist': True,
         'outtmpl': '/tmp/video.%(ext)s',
     }
-    filepath = None
-    try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            ext = info.get('ext', 'mp4')
-            filepath = '/tmp/video.' + ext
-            
-            if not os.path.exists(filepath):
-                raise HTTPException(status_code=400, detail=f"Download file not found: {filepath}")
-
-            file_size = os.path.getsize(filepath)
-            print(f"Downloaded file: {filepath}, size: {file_size}")
-
-            def iter_file():
+    
+    ydl = yt_dlp.YoutubeDL(ydl_opts)
+    info = ydl.extract_info(url, download=True)
+    ext = info.get('ext', 'mp4')
+    filepath = '/tmp/video.' + ext
+    
+    file_size = os.path.getsize(filepath)
+    title = info.get('title', 'video')
+    
+    def file_generator():
+        try:
+            with open(filepath, 'rb') as f:
+                while True:
+                    chunk = f.read(8192)
+                    if not chunk:
+                        break
+                    yield chunk
+        finally:
+            if os.path.exists(filepath):
                 try:
-                    with open(filepath, 'rb') as f:
-                        while chunk := f.read(8192):
-                            yield chunk
-                finally:
-                    if filepath and os.path.exists(filepath):
-                        try:
-                            os.remove(filepath)
-                        except:
-                            pass
+                    os.remove(filepath)
+                except:
+                    pass
+    
+    media_type = f'audio/{ext}' if ext == 'mp3' else 'application/octet-stream'
 
-            media_type = f'audio/{ext}' if ext == 'mp3' else 'application/octet-stream'
-
-            return StreamingResponse(
-                iter_file(),
-                media_type=media_type,
-                headers={
-                    'Content-Disposition': f'attachment; filename="{info["title"]}.{ext}"'
-                }
-            )
-    except HTTPException:
-        raise
-    except Exception as e:
-        print(f"Download error: {e}")
-        raise HTTPException(status_code=400, detail=f"Download error: {str(e)}")
+    return StreamingResponse(
+        file_generator(),
+        media_type=media_type,
+        headers={
+            'Content-Disposition': f'attachment; filename="{title}.{ext}"',
+            'Content-Length': str(file_size)
+        }
+    )
