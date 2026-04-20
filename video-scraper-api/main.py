@@ -81,18 +81,17 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
     if format_id and format_id.lower() == 'none':
         format_id = None
     
-    if format_id:
+    if format_id and format_id != 'best':
         ydl_opts = {
             'format': format_id,
             'noplaylist': True,
-            'outtmpl': '/tmp/video.%(ext)s',
+            'outtmpl': '/tmp/video.mp4',
         }
     else:
         ydl_opts = {
-            'format': 'bestvideo+bestaudio/best',
+            'format': 'best[ext=mp4]/bestvideo+bestaudio/best',
             'noplaylist': True,
-            'outtmpl': '/tmp/video.%(ext)s',
-            'merge_output_format': 'mp4',
+            'outtmpl': '/tmp/video.mp4',
         }
     
     ydl = yt_dlp.YoutubeDL(ydl_opts)
