@@ -101,7 +101,7 @@ function App() {
         </header>
 
         <div className="mb-10">
-          <div className="flex flex-col gap-4" style={{ alignItems: 'center' }}>
+          <div className="flex flex-col gap-6" style={{ alignItems: 'center' }}>
             <input
               type="text"
               value={url}
