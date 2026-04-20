@@ -76,52 +76,71 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      <div className="max-w-xl mx-auto px-6 py-16">
-        <h1 
-          className="text-3xl font-medium text-center mb-10" 
-          style={{ color: '#1A1A1A', fontWeight: 400, letterSpacing: '-0.5px' }}
-        >
-          Universal Video Downloader
-        </h1>
+    <div className="min-h-screen" style={{ backgroundColor: '#FAFAFA' }}>
+      <div className="max-w-lg mx-auto px-6" style={{ paddingTop: '15vh', paddingBottom: '10vh' }}>
         
-        <div className="flex gap-3 mb-8">
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="Paste video URL here..."
-            className="flex-1 px-4 py-3 rounded-lg bg-white border"
+        <header className="text-center mb-16">
+          <h1 
+            className="text-5xl font-medium tracking-tight" 
             style={{ 
-              borderColor: '#E5E5E5',
-              color: '#1A1A1A',
-              fontSize: '15px',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-            }}
-          />
-          <button
-            onClick={fetchInfo}
-            disabled={loading || !url}
-            className="px-6 py-3 rounded-lg font-medium transition-all duration-200"
-            style={{ 
-              backgroundColor: '#2D2D2D', 
-              color: 'white',
-              opacity: loading || !url ? 0.5 : 1,
-              cursor: loading || !url ? 'not-allowed' : 'pointer'
+              color: '#111111', 
+              fontWeight: 400,
+              letterSpacing: '-2px',
+              lineHeight: 1.1
             }}
           >
-            {loading ? 'Loading...' : 'Get Info'}
-          </button>
+            Download any<br />
+            <span style={{ color: '#888888' }}>video.</span>
+          </h1>
+          <p 
+            className="mt-6 text-base"
+            style={{ color: '#888888', fontWeight: 300 }}
+          >
+            Paste a link from YouTube, Instagram, TikTok and more.
+          </p>
+        </header>
+
+        <div className="mb-10">
+          <div className="flex flex-col gap-3">
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={handleKeyPress}
+              placeholder="https://..."
+              disabled={loading}
+              className="w-full px-5 py-4 text-lg rounded-xl bg-white border-0 transition-all duration-300"
+              style={{ 
+                border: '1px solid #EEEEEE',
+                color: '#111111',
+                boxShadow: loading ? 'none' : '0 1px 3px rgba(0,0,0,0.02)',
+                outline: 'none',
+                fontWeight: 300
+              }}
+            />
+            <button
+              onClick={fetchInfo}
+              disabled={loading || !url}
+              className="w-full px-5 py-4 text-base font-medium rounded-xl transition-all duration-300"
+              style={{ 
+                backgroundColor: '#111111', 
+                color: 'white',
+                opacity: loading || !url ? 0.3 : 1,
+                boxShadow: loading || !url ? 'none' : '0 4px 12px rgba(17,17,17,0.15)'
+              }}
+            >
+              {loading ? 'Fetching video...' : 'Get Video Info'}
+            </button>
+          </div>
         </div>
 
         {error && (
           <div 
-            className="mb-6 p-4 rounded-lg text-sm"
+            className="mb-8 p-4 rounded-xl text-sm text-center"
             style={{ 
               backgroundColor: '#FEF2F2', 
               color: '#DC2626',
-              border: '1px solid #FECACA'
+              fontWeight: 300
             }}
           >
             {error}
@@ -130,33 +149,30 @@ function App() {
 
         {videoInfo && (
           <div 
-            className="bg-white rounded-xl p-5 mb-8"
-            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+            className="bg-white rounded-2xl p-6 mb-8"
+            style={{ 
+              boxShadow: '0 2px 20px rgba(0,0,0,0.04)',
+              border: '1px solid #F0F0F0'
+            }}
           >
-            <div className="flex gap-5 mb-5">
+            <div className="flex gap-5 mb-6">
               <img 
                 src={videoInfo.thumbnail} 
                 alt={videoInfo.title} 
-                className="w-44 h-28 object-cover rounded-lg flex-shrink-0"
+                className="w-32 h-20 object-cover rounded-lg flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
                 <h2 
-                  className="font-medium text-base mb-2 line-clamp-2" 
-                  style={{ color: '#1A1A1A', lineHeight: 1.4 }}
+                  className="font-medium text-base leading-snug"
+                  style={{ color: '#111111', lineHeight: 1.3 }}
                 >
                   {videoInfo.title}
                 </h2>
                 <p 
-                  className="text-sm mb-1" 
-                  style={{ color: '#6B6B6B' }}
+                  className="text-sm mt-2"
+                  style={{ color: '#999999', fontWeight: 300 }}
                 >
-                  {videoInfo.uploader}
-                </p>
-                <p 
-                  className="text-sm" 
-                  style={{ color: '#6B6B6B' }}
-                >
-                  {formatDuration(videoInfo.duration)}
+                  {videoInfo.uploader} · {formatDuration(videoInfo.duration)}
                 </p>
               </div>
             </div>
@@ -165,42 +181,44 @@ function App() {
               <select
                 value={selectedFormat}
                 onChange={(e) => setSelectedFormat(e.target.value)}
-                className="flex-1 px-3 py-2.5 rounded-lg text-sm"
+                className="flex-1 px-4 py-3.5 rounded-xl text-base"
                 style={{ 
                   backgroundColor: '#FAFAFA', 
-                  border: '1px solid #E5E5E5',
-                  color: '#1A1A1A'
+                  border: '1px solid #EEEEEE',
+                  color: '#111111',
+                  fontWeight: 300
                 }}
               >
                 {videoInfo.formats.map(f => (
                   <option key={f.format_id} value={f.format_id}>
-                    {f.quality} ({f.ext})
+                    {f.quality} · {f.ext.toUpperCase()}
                   </option>
                 ))}
               </select>
               <button
                 onClick={downloadVideo}
                 disabled={loading}
-                className="px-6 py-2.5 rounded-lg font-medium text-sm transition-all duration-200"
+                className="px-8 py-3.5 rounded-xl font-medium text-base transition-all duration-300"
                 style={{ 
-                  backgroundColor: '#2D2D2D', 
+                  backgroundColor: '#111111', 
                   color: 'white',
-                  opacity: loading ? 0.5 : 1,
-                  cursor: loading ? 'not-allowed' : 'pointer'
+                  opacity: loading ? 0.3 : 1
                 }}
               >
-                {loading ? 'Processing...' : 'Download'}
+                {loading ? 'Downloading...' : 'Download'}
               </button>
             </div>
           </div>
         )}
 
-        <div 
-          className="text-center text-sm"
-          style={{ color: '#9CA3AF' }}
-        >
-          Supports YouTube, Instagram, Facebook, Twitter, TikTok, Reddit, Vimeo, and more
-        </div>
+        <footer className="text-center mt-12">
+          <p 
+            className="text-xs uppercase tracking-widest"
+            style={{ color: '#CCCCCC', fontWeight: 500 }}
+          >
+            Supports 1700+ sites
+          </p>
+        </footer>
       </div>
     </div>
   )
