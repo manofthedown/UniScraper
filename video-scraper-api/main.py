@@ -54,24 +54,30 @@ async def get_video_info(url: str = Query(...)):
 @app.get("/api/download")
 async def download_video(url: str = Query(...), format_id: str = Query(None)):
     ydl_opts = {
-        'format': format_id or 'best',
+        'format': format_id if format_id else 'bestvideo+bestaudio/best',
         'noplaylist': True,
-        'outtmpl': '%(title)s.%(ext)s',
+        'outtmpl': '/tmp/%(title)s.%(ext)s',
+        'progress_hooks': [],
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             filename = ydl.prepare_filename(info)
+            
+            if not os.path.exists(filename):
+                raise HTTPException(status_code=400, detail="Download failed - file not found")
+            
             filename = os.path.basename(filename)
+            filepath = f"/tmp/{filename}"
 
             def iter_file():
                 try:
-                    with open(filename, 'rb') as f:
+                    with open(filepath, 'rb') as f:
                         while chunk := f.read(8192):
                             yield chunk
                 finally:
-                    if os.path.exists(filename):
-                        os.remove(filename)
+                    if os.path.exists(filepath):
+                        os.remove(filepath)
 
             ext = info.get('ext', 'mp4')
             media_type = f'audio/{ext}' if ext == 'mp3' else 'application/octet-stream'
@@ -83,5 +89,7 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
                     'Content-Disposition': f'attachment; filename="{info["title"]}.{ext}"'
                 }
             )
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=f"Download error: {str(e)}")
