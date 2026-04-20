@@ -15,7 +15,7 @@ app.add_middleware(
 )
 
 YTDLP_OPTIONS = {
-    'format': 'best',
+    'format': 'bestvideo+bestaudio/best',
     'noplaylist': True,
     'quiet': True,
     'no_warnings': True,
@@ -30,16 +30,27 @@ async def get_video_info(url: str = Query(...)):
         formats = []
         seen_qualities = set()
         for f in info.get('formats', []):
-            if f.get('ext') in ['mp4', 'm4a', 'webm']:
-                quality = f.get('resolution') or 'audio'
-                if quality not in seen_qualities:
-                    seen_qualities.add(quality)
+            ext = f.get('ext', '')
+            if ext in ['mp4', 'm4a', 'webm', 'mp3', 'wav', 'ogg']:
+                resolution = f.get('resolution') or f.get('height')
+                quality = str(resolution) if resolution else 'audio'
+                quality_key = f"{quality}-{ext}"
+                if quality_key not in seen_qualities:
+                    seen_qualities.add(quality_key)
                     formats.append({
-                        'format_id': f['format_id'],
-                        'ext': f['ext'],
+                        'format_id': f.get('format_id', ''),
+                        'ext': ext,
                         'quality': quality,
                         'filesize': f.get('filesize') or 0
                     })
+        if not formats:
+            for f in info.get('formats', [])[:5]:
+                formats.append({
+                    'format_id': f.get('format_id', 'best'),
+                    'ext': f.get('ext', 'mp4'),
+                    'quality': f.get('resolution') or f.get('height') or 'best',
+                    'filesize': f.get('filesize') or 0
+                })
         return {
             'title': info.get('title'),
             'thumbnail': info.get('thumbnail'),
