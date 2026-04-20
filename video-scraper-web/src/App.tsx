@@ -160,27 +160,25 @@ function App() {
               padding: '16px'
             }}
           >
-            <div className="flex flex-col items-center">
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <img 
                 src={videoInfo.thumbnail} 
                 alt={videoInfo.title} 
                 className="object-cover rounded-lg"
-                style={{ width: '200px', height: '125px' }}
+                style={{ width: '200px', height: '125px', display: 'block' }}
               />
-              <div style={{ marginTop: '8px', textAlign: 'center' }}>
-                <h2 
-                  className="font-medium text-base"
-                  style={{ color: '#111111', margin: 0 }}
-                >
-                  {videoInfo.title}
-                </h2>
-                <p 
-                  className="text-sm"
-                  style={{ color: '#999999', fontWeight: 300, margin: '4px 0 0 0' }}
-                >
-                  {videoInfo.uploader} · {formatDuration(videoInfo.duration)}
-                </p>
-              </div>
+              <h2 
+                className="font-medium text-base"
+                style={{ color: '#111111', margin: '8px 0 0 0', textAlign: 'center' }}
+              >
+                {videoInfo.title}
+              </h2>
+              <p 
+                className="text-sm"
+                style={{ color: '#999999', fontWeight: 300, margin: '4px 0 0 0' }}
+              >
+                {videoInfo.uploader} · {formatDuration(videoInfo.duration)}
+              </p>
             </div>
             
             <div className="flex flex-col" style={{ alignItems: 'center', marginTop: '16px', gap: '16px' }}>
