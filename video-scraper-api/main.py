@@ -19,6 +19,7 @@ YTDLP_OPTIONS = {
     'noplaylist': True,
     'quiet': True,
     'no_warnings': True,
+    'merge_output_format': 'mp4',
 }
 
 
@@ -31,18 +32,27 @@ async def get_video_info(url: str = Query(...)):
         seen_qualities = set()
         for f in info.get('formats', []):
             ext = f.get('ext', '')
-            if ext in ['mp4', 'm4a', 'webm', 'mp3', 'wav', 'ogg']:
-                resolution = f.get('resolution') or f.get('height')
-                quality = str(resolution) if resolution else 'audio'
-                quality_key = f"{quality}-{ext}"
-                if quality_key not in seen_qualities:
-                    seen_qualities.add(quality_key)
-                    formats.append({
-                        'format_id': f.get('format_id', ''),
-                        'ext': ext,
-                        'quality': quality,
-                        'filesize': f.get('filesize') or 0
-                    })
+            vcodec = f.get('vcodec', 'none')
+            acodec = f.get('acodec', 'none')
+            resolution = f.get('resolution') or f.get('height')
+            
+            if resolution:
+                quality = f"{resolution}p"
+            elif acodec != 'none' and vcodec == 'none':
+                quality = 'audio'
+            else:
+                quality = 'video'
+            
+            quality_key = f"{quality}-{ext}"
+            if quality_key not in seen_qualities and ext in ['mp4', 'm4a', 'webm', 'mp3', 'wav', 'ogg', 'mkv']:
+                seen_qualities.add(quality_key)
+                formats.append({
+                    'format_id': f.get('format_id', ''),
+                    'ext': ext,
+                    'quality': quality,
+                    'filesize': f.get('filesize') or 0
+                })
+        
         if not formats:
             for f in info.get('formats', [])[:5]:
                 formats.append({
@@ -68,9 +78,10 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
         format_id = None
     
     ydl_opts = {
-        'format': format_id if format_id else 'best',
+        'format': format_id if format_id else 'bestvideo+bestaudio/best',
         'noplaylist': True,
         'outtmpl': '/tmp/video.%(ext)s',
+        'merge_output_format': 'mp4',
     }
     
     ydl = yt_dlp.YoutubeDL(ydl_opts)
