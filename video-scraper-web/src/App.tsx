@@ -167,16 +167,16 @@ function App() {
                 className="object-cover rounded-lg"
                 style={{ width: '200px', height: '125px' }}
               />
-              <div className="text-center" style={{ marginTop: '8px' }}>
+              <div style={{ marginTop: '8px', textAlign: 'center' }}>
                 <h2 
-                  className="font-medium text-base leading-snug"
-                  style={{ color: '#111111', lineHeight: 1.3 }}
+                  className="font-medium text-base"
+                  style={{ color: '#111111', margin: 0 }}
                 >
                   {videoInfo.title}
                 </h2>
                 <p 
                   className="text-sm"
-                  style={{ color: '#999999', fontWeight: 300, marginTop: '4px' }}
+                  style={{ color: '#999999', fontWeight: 300, margin: '4px 0 0 0' }}
                 >
                   {videoInfo.uploader} · {formatDuration(videoInfo.duration)}
                 </p>
