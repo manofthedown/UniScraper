@@ -159,11 +159,11 @@ function App() {
               margin: '0 auto 2rem auto'
             }}
           >
-            <div className="flex flex-col items-center mb-6">
+            <div className="flex flex-col items-center">
               <img 
                 src={videoInfo.thumbnail} 
                 alt={videoInfo.title} 
-                className="object-cover rounded-lg mb-4"
+                className="object-cover rounded-lg"
                 style={{ width: '200px', height: '125px' }}
               />
               <div className="text-center">
@@ -182,7 +182,7 @@ function App() {
               </div>
             </div>
             
-            <div className="flex flex-col gap-4" style={{ alignItems: 'center' }}>
+            <div className="flex flex-col gap-4" style={{ alignItems: 'center', paddingTop: '12px' }}>
               <select
                 value={selectedFormat}
                 onChange={(e) => setSelectedFormat(e.target.value)}
