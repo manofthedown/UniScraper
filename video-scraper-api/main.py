@@ -32,27 +32,22 @@ async def get_video_info(url: str = Query(...)):
         seen_qualities = set()
         for f in info.get('formats', []):
             ext = f.get('ext', '')
-            vcodec = f.get('vcodec', 'none')
             acodec = f.get('acodec', 'none')
             resolution = f.get('resolution') or f.get('height')
-            
             has_audio = acodec != 'none'
             
-            if resolution:
-                quality = f"{resolution}p"
-            elif acodec != 'none' and vcodec == 'none':
+            if resolution and not has_audio:
+                continue
+            
+            if ext in ['m4a', 'mp3']:
                 quality = 'audio'
+            elif resolution:
+                quality = f"{resolution}p"
             else:
-                quality = 'video'
+                continue
             
             quality_key = f"{quality}-{ext}"
             if quality_key not in seen_qualities and ext in ['mp4', 'm4a', 'mp3']:
-                if not has_audio and resolution:
-                    continue
-                if ext in ['m4a', 'mp3']:
-                    quality = 'audio'
-                elif resolution:
-                    quality = f"{resolution}p"
                 seen_qualities.add(quality_key)
                 formats.append({
                     'format_id': f.get('format_id', ''),
