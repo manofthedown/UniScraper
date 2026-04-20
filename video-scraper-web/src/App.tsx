@@ -167,7 +167,7 @@ function App() {
                 className="object-cover rounded-lg"
                 style={{ width: '200px', height: '125px' }}
               />
-              <div className="text-center" style={{ marginTop: '16px' }}>
+              <div className="text-center" style={{ marginTop: '8px' }}>
                 <h2 
                   className="font-medium text-base leading-snug"
                   style={{ color: '#111111', lineHeight: 1.3 }}
