@@ -59,17 +59,15 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
     ydl_opts = {
         'format': format_id if format_id else 'best',
         'noplaylist': True,
-        'outtmpl': '/tmp/%(title)s.%(ext)s',
+        'outtmpl': '/tmp/video.%(ext)s',
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
-            filename = ydl.prepare_filename(info)
+            filepath = '/tmp/video.' + info.get('ext', 'mp4')
             
-            if not os.path.exists(filename):
+            if not os.path.exists(filepath):
                 raise HTTPException(status_code=400, detail="Download failed - file not found")
-            
-            filepath = filename
 
             def iter_file():
                 try:
