@@ -61,13 +61,18 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
         'noplaylist': True,
         'outtmpl': '/tmp/video.%(ext)s',
     }
+    filepath = None
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
-            filepath = '/tmp/video.' + info.get('ext', 'mp4')
+            ext = info.get('ext', 'mp4')
+            filepath = '/tmp/video.' + ext
             
             if not os.path.exists(filepath):
-                raise HTTPException(status_code=400, detail="Download failed - file not found")
+                raise HTTPException(status_code=400, detail=f"Download file not found: {filepath}")
+
+            file_size = os.path.getsize(filepath)
+            print(f"Downloaded file: {filepath}, size: {file_size}")
 
             def iter_file():
                 try:
@@ -75,10 +80,12 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
                         while chunk := f.read(8192):
                             yield chunk
                 finally:
-                    if os.path.exists(filepath):
-                        os.remove(filepath)
+                    if filepath and os.path.exists(filepath):
+                        try:
+                            os.remove(filepath)
+                        except:
+                            pass
 
-            ext = info.get('ext', 'mp4')
             media_type = f'audio/{ext}' if ext == 'mp3' else 'application/octet-stream'
 
             return StreamingResponse(
@@ -91,4 +98,5 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
     except HTTPException:
         raise
     except Exception as e:
+        print(f"Download error: {e}")
         raise HTTPException(status_code=400, detail=f"Download error: {str(e)}")
