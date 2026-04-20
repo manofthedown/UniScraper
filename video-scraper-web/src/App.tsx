@@ -101,7 +101,7 @@ function App() {
         </header>
 
         <div className="mb-10">
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col gap-4" style={{ alignItems: 'center' }}>
             <input
               type="text"
               value={url}
@@ -109,13 +109,14 @@ function App() {
               onKeyDown={handleKeyPress}
               placeholder="https://..."
               disabled={loading}
-              className="w-full max-w-md px-6 py-4 text-lg rounded-2xl bg-white border-0 transition-all duration-300"
+              className="px-6 py-4 text-lg rounded-2xl bg-white border-0 transition-all duration-300"
               style={{ 
                 border: '1px solid #EEEEEE',
                 color: '#111111',
                 boxShadow: loading ? 'none' : '0 1px 3px rgba(0,0,0,0.02)',
                 outline: 'none',
-                fontWeight: 300
+                fontWeight: 300,
+                width: '340px'
               }}
             />
             <button
@@ -124,7 +125,7 @@ function App() {
               className="px-10 py-4 text-base font-medium rounded-2xl transition-all duration-300"
               style={{ 
                 backgroundColor: '#111111', 
-                color: 'white',
+                color: 'black',
                 opacity: loading || !url ? 0.3 : 1,
                 boxShadow: loading || !url ? 'none' : '0 4px 12px rgba(17,17,17,0.15)'
               }}
