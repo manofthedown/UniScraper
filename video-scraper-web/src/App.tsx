@@ -151,12 +151,13 @@ function App() {
 
         {videoInfo && (
           <div 
-            className="bg-white rounded-2xl p-6 mb-8"
+            className="bg-white rounded-2xl"
             style={{ 
               boxShadow: '0 2px 20px rgba(0,0,0,0.04)',
               border: '1px solid #F0F0F0',
               maxWidth: '760px',
-              margin: '0 auto 2rem auto'
+              margin: '0 auto 2rem auto',
+              padding: '16px'
             }}
           >
             <div className="flex flex-col items-center">
@@ -166,7 +167,7 @@ function App() {
                 className="object-cover rounded-lg"
                 style={{ width: '200px', height: '125px' }}
               />
-              <div className="text-center">
+              <div className="text-center" style={{ marginTop: '16px' }}>
                 <h2 
                   className="font-medium text-base leading-snug"
                   style={{ color: '#111111', lineHeight: 1.3 }}
@@ -174,15 +175,15 @@ function App() {
                   {videoInfo.title}
                 </h2>
                 <p 
-                  className="text-sm mt-2"
-                  style={{ color: '#999999', fontWeight: 300 }}
+                  className="text-sm"
+                  style={{ color: '#999999', fontWeight: 300, marginTop: '4px' }}
                 >
                   {videoInfo.uploader} · {formatDuration(videoInfo.duration)}
                 </p>
               </div>
             </div>
             
-            <div className="flex flex-col gap-4" style={{ alignItems: 'center', paddingTop: '12px' }}>
+            <div className="flex flex-col" style={{ alignItems: 'center', marginTop: '16px', gap: '16px' }}>
               <select
                 value={selectedFormat}
                 onChange={(e) => setSelectedFormat(e.target.value)}
