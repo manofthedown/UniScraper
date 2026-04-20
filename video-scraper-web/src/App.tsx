@@ -154,16 +154,19 @@ function App() {
             className="bg-white rounded-2xl p-6 mb-8"
             style={{ 
               boxShadow: '0 2px 20px rgba(0,0,0,0.04)',
-              border: '1px solid #F0F0F0'
+              border: '1px solid #F0F0F0',
+              maxWidth: '380px',
+              margin: '0 auto 2rem auto'
             }}
           >
-            <div className="flex gap-5 mb-6">
+            <div className="flex flex-col items-center mb-6">
               <img 
                 src={videoInfo.thumbnail} 
                 alt={videoInfo.title} 
-                className="w-32 h-20 object-cover rounded-lg flex-shrink-0"
+                className="object-cover rounded-lg mb-4"
+                style={{ width: '200px', height: '125px' }}
               />
-              <div className="flex-1 min-w-0">
+              <div className="text-center">
                 <h2 
                   className="font-medium text-base leading-snug"
                   style={{ color: '#111111', lineHeight: 1.3 }}
@@ -179,16 +182,17 @@ function App() {
               </div>
             </div>
             
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3" style={{ alignItems: 'center' }}>
               <select
                 value={selectedFormat}
                 onChange={(e) => setSelectedFormat(e.target.value)}
-                className="flex-1 px-4 py-3.5 rounded-xl text-base"
+                className="px-4 py-3.5 rounded-xl text-base"
                 style={{ 
                   backgroundColor: '#FAFAFA', 
                   border: '1px solid #EEEEEE',
                   color: '#111111',
-                  fontWeight: 300
+                  fontWeight: 300,
+                  width: '260px'
                 }}
               >
                 {videoInfo.formats.map(f => (
