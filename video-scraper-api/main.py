@@ -70,6 +70,8 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
     file_size = os.path.getsize(filepath)
     title = info.get('title', 'video')
     
+    safe_title = ''.join(c if ord(c) < 128 else '_' for c in title)
+    
     def file_generator():
         try:
             with open(filepath, 'rb') as f:
@@ -91,7 +93,7 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
         file_generator(),
         media_type=media_type,
         headers={
-            'Content-Disposition': f'attachment; filename="{title}.{ext}"',
+            'Content-Disposition': f'attachment; filename="{safe_title}.{ext}"',
             'Content-Length': str(file_size)
         }
     )
