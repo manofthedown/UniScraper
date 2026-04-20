@@ -86,12 +86,20 @@ async def download_video(url: str = Query(...), format_id: str = Query(None)):
             'format': format_id,
             'noplaylist': True,
             'outtmpl': '/tmp/video.mp4',
+            'postprocessors': [{
+                'key': 'FFmpegMerger',
+                'preferedformat': 'mp4',
+            }],
         }
     else:
         ydl_opts = {
-            'format': 'best[ext=mp4]/bestvideo+bestaudio/best',
+            'format': 'bestvideo+bestaudio/best',
             'noplaylist': True,
             'outtmpl': '/tmp/video.mp4',
+            'postprocessors': [{
+                'key': 'FFmpegMerger',
+                'preferedformat': 'mp4',
+            }],
         }
     
     ydl = yt_dlp.YoutubeDL(ydl_opts)
